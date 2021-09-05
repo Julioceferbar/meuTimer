@@ -1,14 +1,45 @@
-const relogio = document.querySelector('.relogio'); //seleciona o botao
-const iniciar = document.querySelector('.iniciar');
-const pausar = document.querySelector('.pausar');
-const zerar = document.querySelector('.zerar');
+function relogio() {
+  function criaHoraDosSegundos(segundos) {
+    //formatação hora
+    const data = new Date(segundos * 1000);
+    return data.toLocaleTimeString("pt-BR", {
+      hous12: false,
+      timeZone: "UTC",
+    });
+  }
 
-iniciar.addEventListener('click', function(event) {
-    alert('cliquei no iniciar');
-});
-pausar.addEventListener('click', function(event) {
-    alert('cliquei no pausar');
-});
-zerar.addEventListener('click', function(event) {
-    alert('cliquei no zerar');
-});
+  const relogio = document.querySelector(".relogio"); //seleciona o botao
+  let segundos = 0;
+  let timer;
+
+  function iniciaRelogio() {
+    //formatação dos segundos
+    timer = setInterval(function () {
+      segundos++;
+      relogio.innerHTML = criaHoraDosSegundos(segundos);
+    }, 1000);
+  }
+
+  document.addEventListener("click", function (e) {
+    const el = e.target;
+
+    if (el.classList.contains("zerar")) {
+      clearInterval(timer);
+      relogio.innerHTML = "00:00:00";
+      relogio.classList.remove("pausado");
+      segundos = 0;
+    }
+
+    if (el.classList.contains("iniciar")) {
+      relogio.classList.remove("pausado");
+      clearInterval(timer);
+      iniciaRelogio();
+    }
+
+    if (el.classList.contains("pausar")) {
+      clearInterval(timer);
+      relogio.classList.add("pausado");
+    }
+  });
+}
+relogio();
